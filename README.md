@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+# Sources
+- https://youtu.be/57099pou7iE?si=ZmNM4fHYujLOTubF
+- https://next-auth.js.org/
+
 ## Getting Started
 
 First, run the development server:
