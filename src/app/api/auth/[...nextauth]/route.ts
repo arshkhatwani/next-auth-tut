@@ -2,6 +2,8 @@ import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import users from "@/app/constants/users";
+import prisma from "@/db";
+import { GoogleUser } from "@/types";
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -42,8 +44,27 @@ export const authOptions: AuthOptions = {
     ],
     secret: process.env.NEXTAUTH_SECRET as string,
     callbacks: {
-        async session({ session, user, token }) {
-            // This is callback
+        async session({ session }) {
+            const { email, name, image } = session.user as GoogleUser;
+            const isUser = await prisma.user.findFirst({
+                where: {
+                    email: email,
+                },
+            });
+            if (!isUser) {
+                console.log(
+                    `User ${email} does not exist, creating user and logging in`
+                );
+                await prisma.user.create({
+                    data: {
+                        name: name,
+                        email: email,
+                        profile: image,
+                    },
+                });
+            } else {
+                console.log(`User ${email} exists, logging in`);
+            }
             return session;
         },
     },
